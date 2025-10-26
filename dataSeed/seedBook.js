@@ -1,5 +1,4 @@
-// Run this script to add sample books to your database
-// node seed-books.js
+
 
 const axios = require('axios');
 
@@ -117,20 +116,20 @@ const sampleBooks = [
 ];
 
 async function seedBooks() {
-  console.log('🌱 Starting to seed books...\n');
+  console.log('Starting to seed books...\n');
 
   for (const book of sampleBooks) {
     try {
       const response = await axios.post(`${API_URL}/books`, book);
-      console.log(`✅ Added: ${book.title}`);
+      console.log(`Added: ${book.title}`);
     } catch (error) {
-      console.error(`❌ Failed to add: ${book.title}`);
+      console.error(`Failed to add: ${book.title}`);
       console.error(error.response?.data || error.message);
     }
   }
 
-  console.log('\n✨ Seeding completed!');
-  console.log(`📚 Total books added: ${sampleBooks.length}`);
+  console.log('\nSeeding completed!');
+  console.log(`Total books added: ${sampleBooks.length}`);
 }
 
 seedBooks();

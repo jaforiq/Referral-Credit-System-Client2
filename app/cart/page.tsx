@@ -39,7 +39,6 @@ export default function Cart() {
 
     setIsProcessing(true);
     try {
-      // Create a purchase for the cart items
       const purchaseData = {
         productName: `${items.length} Book(s)`,
         amount: totalPrice,
@@ -50,7 +49,7 @@ export default function Cart() {
       if (response.data) {
         updateCredits(response.data.currentCredits);
         toast.success(
-          `🎉 Purchase successful! You earned 2 credits from your referral!`,
+          `Purchase successful! You earned 2 credits from your referral!`,
           { duration: 5000, icon: '🎊' }
         );
       } else {
@@ -115,7 +114,6 @@ export default function Cart() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
             {items.map((item, index) => (
               <motion.div
@@ -125,7 +123,6 @@ export default function Cart() {
                 transition={{ delay: index * 0.1 }}
                 className="card flex gap-4"
               >
-                {/* Book Image */}
                 <div className="relative w-24 h-32 bg-gray-100 rounded-lg overflow-hidden shrink-0">
                   <Image
                     src={item.book.coverImage}
@@ -135,7 +132,6 @@ export default function Cart() {
                   />
                 </div>
 
-                {/* Book Details */}
                 <div className="flex-1">
                   <h3 className="text-lg font-bold text-gray-900 mb-1">
                     {item.book.title}
@@ -149,7 +145,6 @@ export default function Cart() {
                       ${item.book.price.toFixed(2)}
                     </p>
 
-                    {/* Quantity Controls */}
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
                         <button
@@ -180,7 +175,6 @@ export default function Cart() {
             ))}
           </div>
 
-          {/* Order Summary */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

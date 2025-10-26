@@ -26,7 +26,6 @@ export default function BookCard({ book, index }: BookCardProps) {
       whileHover={{ y: -8 }}
       className="card group cursor-pointer"
     >
-      {/* Book Cover */}
       <div className="relative h-64 bg-gray-100 rounded-lg overflow-hidden mb-4">
         <Image
           src={book.coverImage}
@@ -42,7 +41,6 @@ export default function BookCard({ book, index }: BookCardProps) {
         </div>
       </div>
 
-      {/* Book Info */}
       <div className="flex-1">
         <div className="mb-2">
           <span className="text-xs font-medium text-primary-600 bg-primary-50 px-2 py-1 rounded">
@@ -58,7 +56,6 @@ export default function BookCard({ book, index }: BookCardProps) {
         </p>
       </div>
 
-      {/* Price and Action */}
       <div className="flex items-center justify-between pt-4 border-t border-gray-100">
         <div>
           <p className="text-xl font-bold text-gray-900">${book.price.toFixed(2)}</p>

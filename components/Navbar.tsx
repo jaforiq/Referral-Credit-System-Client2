@@ -46,7 +46,6 @@ export default function Navbar() {
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
-          {/* Logo */}
           <Link href="/">
             <div className="flex items-center gap-2 cursor-pointer group">
               <BookOpen className="w-8 h-8 text-primary-600 group-hover:scale-110 transition-transform" />
@@ -57,9 +56,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Right Section */}
           <div className="flex items-center gap-4">
-            {/* Cart Button */}
             <Link href="/cart">
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -79,7 +76,6 @@ export default function Navbar() {
               </motion.button>
             </Link>
 
-            {/* User Menu or Auth Buttons */}
             {isAuthenticated && user ? (
               <div className="relative" ref={menuRef}>
                 <button
