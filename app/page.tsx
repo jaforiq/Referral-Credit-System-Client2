@@ -84,7 +84,7 @@ export default function Home() {
           className="mb-8"
         >
           <div className="relative max-w-2xl mx-auto">
-            <Search className="absolute left-1 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
               placeholder="Search books by title or author..."
