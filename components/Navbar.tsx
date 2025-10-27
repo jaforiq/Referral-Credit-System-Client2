@@ -7,14 +7,16 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useCartStore } from '@/store/useCartStore';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, LogOut, LayoutDashboard, BookOpen } from 'lucide-react';
+import { ShoppingCart, User, LogOut, LayoutDashboard, BookOpen, Menu, X, LogIn, UserPlus } from 'lucide-react';
 
 export default function Navbar() {
   const router = useRouter();
-  const { user, isAuthenticated, logout, fetchProfile } = useAuthStore();
   const { getTotalItems } = useCartStore();
-  const [showUserMenu, setShowUserMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const { user, isAuthenticated, logout, fetchProfile } = useAuthStore();
 
   const totalItems = getTotalItems();
 
@@ -29,6 +31,9 @@ export default function Navbar() {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setShowUserMenu(false);
       }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setShowMobileMenu(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -38,25 +43,33 @@ export default function Navbar() {
   const handleLogout = () => {
     logout();
     setShowUserMenu(false);
+    setShowMobileMenu(false);
     toast.success('Logged out successfully');
     router.push('/');
   };
 
+  const closeMobileMenu = () => {
+    setShowMobileMenu(false);
+  };
+
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-between items-center">
+          {/* Logo */}
           <Link href="/">
             <div className="flex items-center gap-2 cursor-pointer group">
-              <BookOpen className="w-8 h-8 text-primary-600 group-hover:scale-110 transition-transform" />
+              <BookOpen className="w-7 h-7 sm:w-8 sm:h-8 text-primary-600 group-hover:scale-110 transition-transform" />
               <div>
-                <h1 className="text-2xl font-bold text-gradient">BookHub</h1>
-                <p className="text-xs text-gray-500">Digital E-Books Store</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-gradient">BookHub</h1>
+                <p className="text-xs text-gray-500 hidden sm:block">Digital E-Books Store</p>
               </div>
             </div>
           </Link>
 
-          <div className="flex items-center gap-4">
+          {/* Desktop Right Section */}
+          <div className="hidden md:flex items-center gap-4">
+            {/* Cart Button */}
             <Link href="/cart">
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -76,6 +89,7 @@ export default function Navbar() {
               </motion.button>
             </Link>
 
+            {/* User Menu or Auth Buttons */}
             {isAuthenticated && user ? (
               <div className="relative" ref={menuRef}>
                 <button
@@ -85,7 +99,7 @@ export default function Navbar() {
                   <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white font-semibold">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
-                  <div className="text-left hidden md:block">
+                  <div className="text-left">
                     <p className="text-sm font-semibold text-gray-900">{user.name}</p>
                     <p className="text-xs text-gray-600">{user.credits} Credits</p>
                   </div>
@@ -145,7 +159,128 @@ export default function Navbar() {
               </div>
             )}
           </div>
+
+          {/* Mobile Right Section */}
+          <div className="flex md:hidden items-center gap-2">
+            {/* Mobile Cart Button */}
+            <Link href="/cart">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <ShoppingCart className="w-6 h-6 text-gray-700" />
+                {totalItems > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-primary-600 text-white text-xs font-bold rounded-full flex items-center justify-center"
+                  >
+                    {totalItems}
+                  </motion.span>
+                )}
+              </motion.button>
+            </Link>
+
+            {/* Mobile: User Avatar or Menu Button */}
+            {isAuthenticated && user ? (
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <div className="w-9 h-9 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white font-semibold">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                </button>
+
+                <AnimatePresence>
+                  {showUserMenu && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-200 py-2 overflow-hidden"
+                    >
+                      <div className="px-4 py-3 border-b border-gray-100">
+                        <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+                        <p className="text-xs text-gray-600">{user.email}</p>
+                        <div className="mt-2 flex items-center gap-2">
+                          <div className="px-2 py-1 bg-primary-100 text-primary-700 rounded text-xs font-medium">
+                            {user.credits} Credits
+                          </div>
+                        </div>
+                      </div>
+
+                      <Link href="/dashboard">
+                        <button
+                          onClick={() => setShowUserMenu(false)}
+                          className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-3 text-gray-700"
+                        >
+                          <LayoutDashboard className="w-5 h-5" />
+                          <span className="font-medium">Referral Dashboard</span>
+                        </button>
+                      </Link>
+
+                      <button
+                        onClick={handleLogout}
+                        className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-3 text-red-600"
+                      >
+                        <LogOut className="w-5 h-5" />
+                        <span className="font-medium">Logout</span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                {showMobileMenu ? (
+                  <X className="w-6 h-6 text-gray-700" />
+                ) : (
+                  <Menu className="w-6 h-6 text-gray-700" />
+                )}
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* Mobile Menu (Only for Non-Authenticated Users) */}
+        <AnimatePresence>
+          {showMobileMenu && !isAuthenticated && (
+            <motion.div
+              ref={mobileMenuRef}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden mt-4 overflow-hidden"
+            >
+              <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
+                <Link href="/login">
+                  <button
+                    onClick={closeMobileMenu}
+                    className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-3 text-gray-700 border-b border-gray-100"
+                  >
+                    <LogIn className="w-5 h-5" />
+                    <span className="font-medium">Login</span>
+                  </button>
+                </Link>
+
+                <Link href="/register">
+                  <button
+                    onClick={closeMobileMenu}
+                    className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-3 text-primary-600"
+                  >
+                    <UserPlus className="w-5 h-5" />
+                    <span className="font-medium">Sign Up</span>
+                  </button>
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );
